@@ -30,14 +30,10 @@ nextRow y
     | y /= mapRows = ""
     | y == mapRows = "\n"
 
-getMap (Board(m)) = m
+getMap (Board(m)) = m 
 
-insertCellToMap pos c = Map.insert pos c bMap
+--getColor (Board(_ _ c)) = c
 
-insertCell x y c = Board (insertCellToMap (Pos(x, y)) c)
+insertCellToMap m pos c = Map.insert pos c m
 
-
-
-
-
-
+insertCell m x y c = Board (insertCellToMap m (Pos(x, y)) c)
