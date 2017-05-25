@@ -32,12 +32,6 @@ nextRow y
 
 getMap (Board(m)) = m
 
-insertCellToMap pos c = Map.insert pos c bMap
+insertCellToMap m pos c = Map.insert pos c m
 
-insertCell x y c = Board (insertCellToMap (Pos(x, y)) c)
-
-
-
-
-
-
+insertCell m x y c = Board (insertCellToMap m (Pos(x, y)) c)
