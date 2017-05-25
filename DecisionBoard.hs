@@ -7,18 +7,24 @@ import Position as Position
 import Color as Color
 
 
-data Game = DecisionBoard Board Color Position
+--data Game = DecisionBoard Board Color Position
+--newtype GameTree = Tree Game
 
-newtype GameTree = Tree Game
+newtype GameNode = GNode(Board, [GameNode], Color)
 
-newtype GameLeaf = Leaf(Board, [Board])
 
 canBeInserted m x y = Map.lookup (Pos(x, y)) m == Nothing
 
 possibleNextMoves m c = [insertCell m x y c | x <-Board.cords, y<-Board.cords, (canBeInserted m x y)]
 
-firstMove = insertCell bMap 9 9 B
-tree = Leaf(firstMove, (possibleNextMoves bMap W))
+firstMove = insertCell bMap 10 10  B
 
+getColor (GNode(_, _, c)) = c
+getBoard (GNode(b, _, c)) = b
 
--- TODO: oceniajac drzewo nalezy uzyc fmap, dzieki czemu do kazdego elementu zostanie zapisana ocena
+nextMove b c = possibleNextMoves (getMap b) W
+--createNode b c = GNode (b, nextMove b c, c)    
+
+-- tree = createTree 
+
+--Tree.fmap do oceny

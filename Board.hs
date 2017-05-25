@@ -30,7 +30,9 @@ nextRow y
     | y /= mapRows = ""
     | y == mapRows = "\n"
 
-getMap (Board(m)) = m
+getMap (Board(m)) = m 
+
+--getColor (Board(_ _ c)) = c
 
 insertCellToMap m pos c = Map.insert pos c m
 
