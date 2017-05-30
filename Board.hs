@@ -1,12 +1,12 @@
 module Board where
 
-import qualified Data.Map as Map
+import qualified Data.Map as GMap
 
 import Data.List
 import Color as Color
 import Position as Position
 
-newtype Board = Board(Map.Map Position Color)
+newtype Board = Board(GMap.Map Position Color, Color)
 
 instance Show (Board) where
     show x = showBoard x
@@ -14,26 +14,22 @@ instance Show (Board) where
 mapRows = 19
 cords = [1..mapRows]
 
-bMap = Map.fromList []
-
-board = Board bMap
-
-showBoard :: (Board) -> [Char]
-showBoard (Board m) = intercalate "" [((showCell m (Pos(x, y)))++nextRow y)| x <-cords, y<-cords]
+showBoard :: Board -> [Char]
+showBoard board = intercalate "" [((showCell (getMap board) (Pos(x, y)))++nextRow y)| x <-cords, y<-cords]
 
 showCell m pos
-    | Map.lookup pos m == Nothing = " . "
-    | Map.lookup pos m == Just B = " "++ (show B) ++" "
-    | Map.lookup pos m == Just W = " "++ (show W) ++" "
+    | GMap.lookup pos m == Nothing = " . "
+    | GMap.lookup pos m == Just B = " "++ (show B) ++" "
+    | GMap.lookup pos m == Just W = " "++ (show W) ++" "
 
 nextRow y
     | y /= mapRows = ""
     | y == mapRows = "\n"
 
-getMap (Board(m)) = m 
+getMap (Board(m, _)) = m
+getColor (Board(_, c)) = c
+getCell board pos = GMap.lookup pos (getMap board)
 
---getColor (Board(_ _ c)) = c
+insertCellToMap m pos c = GMap.insert pos c m
 
-insertCellToMap m pos c = Map.insert pos c m
-
-insertCell m x y c = Board (insertCellToMap m (Pos(x, y)) c)
+insertCell m x y c = Board (insertCellToMap m (Pos(x, y)) c, c)

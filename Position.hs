@@ -9,3 +9,8 @@ instance Ord Position where
         | l1 == l2 && r1>r2 = GT
         | l1 < l2 = LT
         | l1 > l2 = GT
+
+instance Num Position where
+    (Pos (x1, y1)) + (Pos(x2, y2)) = Pos(x1+x2, y1+y2)
+    (Pos (x1, y1)) - (Pos(x2, y2)) = Pos(x1-x2, y1-y2)
+    (Pos (x1, y1)) * (Pos(x2, y2)) = Pos(x1*x2, y1*y2)
