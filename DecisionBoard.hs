@@ -28,18 +28,31 @@ getNodes (GNode(_, nodes)) = nodes
 getNode node [a] = (getNodes node) !! a
 getNode node indexes = getNode ((getNodes node) !! (head indexes)) (tail indexes)
 
-createNodes board = [ childBoard | childBoard <- (nextMoves board )]
+createNodes board = [ childcBoard | childBoard <- (nextMoves board )]
+
+createTreeNode seed = (seed, createNodes seed)
+plantTree = Tree.unfoldTree (createTreeNode) firstMove
 
 createTree board = GNode (board, [createTree node | node <- createNodes board ])
 
--- return [Position] next to Position(x, y)
-neighbors board x y = [ Pos(x', y') | x' <- [x-1..x+1], y' <- [y-1..y+1], x /= x' || y /= y']
+neighborsOfMoore board x y = (neighborsOfVonNeuman board x y ) ++ (neighborsOnX board x y )
 -- return [Position] next to Position(x, y) which colors differ from Board's Color
-enemyNeighbors board x y = [ pos | pos <- (neighbors board x y), (getCell board pos ) == Just (not' (getColor board)) ]
+enemyNeighbors board x y = [ pos | pos <- (neighborsOfMoore board x y), (getCell board pos ) == Just (not' (getColor board)) ]
 -- return [Position] next to Position(x, y) which colors matches Board's Color
-friendlyNeighbors board x y = [ pos | pos <- (neighbors board x y), (getCell board pos ) == Just (getColor board) ]
+friendlyNeighbors board x y = [ pos | pos <- (neighborsOfMoore board x y), (getCell board pos ) == Just (getColor board) ]
 
+neighborsOnX board x y = [Pos(x', y') | x' <- [x-1..x+1], y' <- [y-1..y+1], x /= x' && y /= y']
 
+neighborsOfVonNeuman board x y = [ Pos(x', y') | x' <- [x-1..x+1], y' <- [y-1..y+1], x == x' || y == y', x /= x' && y /= y']
 
+markBoard board = 0
+
+-- fmap markBoard plantTree ?
 
 --Tree.fmap do oceny
+--przyklad
+--instance Functor BinaryTree where
+--    fmap f Leaf = Leaf
+--    fmap f (Node a l r) = Node (f a) (fmap f l) (fmap f r)
+
+-- ?
