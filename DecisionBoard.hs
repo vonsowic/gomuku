@@ -35,13 +35,12 @@ plantTree = Tree.unfoldTree (createTreeNode) firstMove
 
 createTree board = GNode (board, [createTree node | node <- createNodes board ])
 
-neighborsOfMoore board x y = (neighborsOfVonNeuman board x y ) ++ (neighborsOnX board x y )
 neighborsOnX board x y = [Pos(x', y') | x' <- [x-1..x+1], y' <- [y-1..y+1], x /= x' && y /= y']
 neighborsOfVonNeuman board x y = [ Pos(x', y') | x' <- [x-1..x+1], y' <- [y-1..y+1], x == x' || y == y', x /= x' && y /= y']
+neighborsOfMoore board x y = (neighborsOfVonNeuman board x y ) ++ (neighborsOnX board x y )
 
 friendlyNeighbors fun board x y = [ pos | pos <- (fun board x y), (getCell board pos ) == Just (getColor board) ]
 enemyNeighbors fun board x y = [ pos | pos <- (fun board x y), (getCell board pos ) == Just (not' (getColor board)) ]
-
 
 markBoard board = 0
 
