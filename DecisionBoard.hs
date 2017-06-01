@@ -28,7 +28,7 @@ getNodes (GNode(_, nodes)) = nodes
 getNode node [a] = (getNodes node) !! a
 getNode node indexes = getNode ((getNodes node) !! (head indexes)) (tail indexes)
 
-createNodes board = [ childcBoard | childBoard <- (nextMoves board )]
+createNodes board = [ childBoard | childBoard <- (nextMoves board )]
 
 createTreeNode seed = (seed, createNodes seed)
 plantTree = Tree.unfoldTree (createTreeNode) firstMove
