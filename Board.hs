@@ -9,9 +9,9 @@ import Position as Position
 newtype Board = Board(GMap.Map Position Color, Color)
 
 instance Show (Board) where
-    show x = showBoard x
+    show x = "\n" ++ showBoard x
 
-mapRows = 19
+mapRows = 3
 cords = [1..mapRows]
 
 showBoard :: Board -> [Char]

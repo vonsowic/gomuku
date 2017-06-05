@@ -5,6 +5,7 @@ import Data.Tree as Tree
 import qualified Data.Map as GMap
 import Position as Position
 import Color as Color
+import Data.Tree.Pretty as P
 
 
 newtype GameNode = GNode(Board, [GameNode])
@@ -20,7 +21,7 @@ possibleNextMoves m c = [insertCell m x y c | x <-Board.cords, y<-Board.cords, (
 nextMoves b = possibleNextMoves (getMap b) (not' (getColor b))
 
 -- Board with first move
-firstMove = insertCell (GMap.fromList []) 10 10 B
+firstMove = insertCell (GMap.fromList []) 2 2 B
 
 getBoard (GNode(b, _)) = b
 getNodes (GNode(_, nodes)) = nodes
@@ -28,10 +29,17 @@ getNodes (GNode(_, nodes)) = nodes
 getNode node [a] = (getNodes node) !! a
 getNode node indexes = getNode ((getNodes node) !! (head indexes)) (tail indexes)
 
+--getNode tree indexes = (nextPossibleMoves firstMove) !! 1
+
 createNodes board = [ childBoard | childBoard <- (nextMoves board )]
 
 createTreeNode seed = (seed, createNodes seed)
 plantTree = Tree.unfoldTree (createTreeNode) firstMove
+
+-- for Data.Tree.Pretty
+getStringNode board = show board
+
+---------------------------------------------------------------
 
 createTree board = GNode (board, [createTree node | node <- createNodes board ])
 
@@ -42,7 +50,7 @@ neighborsOfMoore board x y = (neighborsOfVonNeuman board x y ) ++ (neighborsOnX 
 friendlyNeighbors fun board x y = [ pos | pos <- (fun board x y), (getCell board pos ) == Just (getColor board) ]
 enemyNeighbors fun board x y = [ pos | pos <- (fun board x y), (getCell board pos ) == Just (not' (getColor board)) ]
 
-markBoard board = 0
+markBoard board = 1
 
 -- fmap markBoard plantTree ?
 
