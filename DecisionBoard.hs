@@ -13,7 +13,6 @@ newtype GameNode = GNode(Board, [GameNode])
 
 instance Show (GameNode) where
     show x = show (getBoard x)
-
 ------------------------------------------------------------------------------------------------------------------------
 
 
@@ -75,9 +74,8 @@ enemyNeighbors fun board x y = [ pos | pos <- (fun board x y), (getCell board po
 ------------------------------------------------------------------------------------------------------------------------
 
 
-------------------------------------------------------------------------------------------------------------------------
--- get all positions from board, where posotion color matches color param
-friendlyPositions board color = map fst (filter (\m -> (snd m) == color) (GMap.toList ( getMap firstMove)))
+----- get all positions from board, where position's color matches param color -----------------------------------------
+positionsOfColor board color = map fst (filter (\m -> (snd m) == color) (GMap.toList (getMap firstMove)))
 ------------------------------------------------------------------------------------------------------------------------
 
 

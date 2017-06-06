@@ -13,7 +13,6 @@ instance Ord Position where
 instance Num Position where
     (Pos (x1, y1)) + (Pos(x2, y2)) = Pos(x1+x2, y1+y2)
     (Pos (x1, y1)) - (Pos(x2, y2)) = Pos(x1-x2, y1-y2)
-    (Pos (x1, y1)) * (Pos(x2, y2)) = Pos(x1*x2, y1*y2)
 
 
 x(Pos(x, _)) = x
@@ -25,4 +24,3 @@ abs' n = if n >= 0 then n else (-1) * n
 isNextTo pos1 pos2 = abs ((x pos1) - (x pos2)) <=1 && abs ((y pos1) - (y pos2)) <=1
 
 tuple (Pos(x, y)) = (x, y)
-
