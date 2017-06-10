@@ -1,6 +1,6 @@
 module Position where
 
-newtype Position = Pos(Int, Int) deriving (Show, Eq)
+newtype Position = Pos(Int, Int) deriving (Eq)
 
 instance Ord Position where
     compare (Pos(l1,r1)) (Pos(l2,r2))
@@ -13,6 +13,9 @@ instance Ord Position where
 instance Num Position where
     (Pos (x1, y1)) + (Pos(x2, y2)) = Pos(x1+x2, y1+y2)
     (Pos (x1, y1)) - (Pos(x2, y2)) = Pos(x1-x2, y1-y2)
+
+instance Show Position where
+    show pos = "x: " ++ (show (x pos)) ++ ", y: " ++ (show (y pos))
 
 
 x(Pos(x, _)) = x

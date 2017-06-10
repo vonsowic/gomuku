@@ -6,7 +6,7 @@ import Data.List
 import Color as Color
 import Position as Position
 
-newtype Board = Board(GMap.Map Position Color, Color)
+newtype Board = Board(GMap.Map Position Color, Position, Color)
 
 instance Show (Board) where
     show x = "\n" ++ showBoard x
@@ -26,10 +26,11 @@ nextRow y
     | y /= mapRows = ""
     | y == mapRows = "\n"
 
-getMap (Board(m, _)) = m
-getColor (Board(_, c)) = c
-getCell board pos = GMap.lookup pos (getMap board)
+getMap (Board(m, _, _)) = m
+getColor (Board(_, _, c)) = c
+getPos(Board(_, p, _)) = p
 
+getCell board pos = GMap.lookup pos (getMap board)
 insertCellToMap m pos c = GMap.insert pos c m
 
-insertCell m x y c = Board (insertCellToMap m (Pos(x, y)) c, c)
+insertCell m x y c = Board (insertCellToMap m (Pos(x, y)) c, Pos(x, y), c)

@@ -2,6 +2,7 @@ module DecisionBoard where
 
 import Board as Board
 import Data.Tree as Tree
+import Data.List as List
 import qualified Data.Map as GMap
 import Position as Position
 import Color as Color
@@ -54,49 +55,33 @@ createTreeNode seed = (seed, createNodes seed)
 plantTree = Tree.unfoldTree (createTreeNode) firstMove
 ------------------------------------------------------------------------------------------------------------------------
 
+--getChildNodes(Tree.Node(_, children)) = children
+
+------------------------------------------------------------------------------------------------------------------------
+
 
 ----- for Data.Tree.Pretty ---------------------------------------------------------------------------------------------
 getStringNode board = show board
 ------------------------------------------------------------------------------------------------------------------------
 
 
------- neighbors getters -----------------------------------------------------------------------------------------------
-neighborsOnX board x y = [Pos(x', y') | x' <- [x-1..x+1], y' <- [y-1..y+1], x /= x' && y /= y']
+------ n(neighbors) getters --------------------------------------------------------------------------------------------
 
-neighborsOfVonNeuman board x y = [
-        Pos(x', y') | x' <- [x-1..x+1], y' <- [y-1..y+1], x == x' || y == y', not(x == x' && y == y')
-    ]
+nOnSlash board pos range = List.delete pos [Pos((x pos)+r, (y pos)+r) | r <- [-range..range]]
+nOnBackSlash board pos range = List.delete pos [Pos((x pos)+r, (y pos)-r) | r <- [-range..range]]
+nOnX board pos range = (nOnSlash board pos range) ++ (nOnBackSlash board pos range)
 
-neighborsOfMoore board x y = (neighborsOfVonNeuman board x y ) ++ (neighborsOnX board x y )
+nInRow board pos range = List.delete pos [Pos(x', y pos) | x' <- [(x pos)-range..(x pos)+range]]
+nInCol board pos range = List.delete pos [Pos(x pos, y') | y' <- [(y pos)-range..(y pos)+range]]
+nOfVonNeuman board pos range = (nInRow board pos range) ++ (nInCol board pos range)
 
-friendlyNeighbors fun board x y = [ pos | pos <- (fun board x y), (getCell board pos ) == Just (getColor board) ]
-enemyNeighbors fun board x y = [ pos | pos <- (fun board x y), (getCell board pos ) == Just (not' (getColor board)) ]
+nOfMoore board pos range = (nOfVonNeuman board pos range) ++ (nOnX board pos range)
+
+friendly fun board pos range = [ pos' | pos' <- (fun board pos range), (getCell board pos' ) == Just (getColor board) ]
+enemy fun board pos range = [ pos' | pos' <- (fun board pos range), (getCell board pos' ) == Just (not' (getColor board)) ]
 ------------------------------------------------------------------------------------------------------------------------
 
 
 ----- get all positions from board, where position's color matches param color -----------------------------------------
 positionsOfColor board color = map fst (filter (\m -> (snd m) == color) (GMap.toList (getMap firstMove)))
 ------------------------------------------------------------------------------------------------------------------------
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
