@@ -1,5 +1,4 @@
---- cabal: parsec3, parsec-numbers
-import System.Environment
+import System.Environment()
 import Control.Monad.Trans.State.Lazy
 import Text.ParserCombinators.Parsec
 import Text.ParserCombinators.Parsec.Number
@@ -9,7 +8,6 @@ import System.IO
 import Data.Maybe
 import Control.Monad.IO.Class
 import Data.Char
-import Data.Maybe
 
 import Position as Position
 
@@ -31,12 +29,12 @@ parsePosC = do
               return $ (ord x) - (ord 'a') + 1
 
 
-parseSinglePos =  choice [parsePosI,parsePosC]
+parseSinglePos = choice [parsePosI,parsePosC]
 parsePos = do
               x <- parseSinglePos
               spaces
               y <- parseSinglePos
-              return Pos(x,y)
+              return (x,y)
 
 
 doPlay = getContents >>= (mapM_ play) . lines
@@ -47,12 +45,13 @@ play i = do
     Left x -> fail $ show x
 
 
+
 printHistory :: Show a => [a] -> IO ()
 printHistory h =  do
   hPutStrLn stderr "History"
   mapM_ (hPutStrLn stderr.show) h
 
-type Play a = StateT [(Int,Int)] IO a
+type Play a = StateT [(Int, Int)] IO a
 playS :: String -> Play ()
 playS i = do
   history <- get
