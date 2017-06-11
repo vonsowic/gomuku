@@ -34,3 +34,10 @@ getCell board pos = GMap.lookup pos (getMap board)
 insertCellToMap m pos c = GMap.insert pos c m
 
 insertCell m x y c = Board (insertCellToMap m (Pos(x, y)) c, Pos(x, y), c)
+
+------------------------------------------------------------------------------------------------------------------------
+-- 1 2 3 4 5
+-- 2 . . . .
+-- 3 . . x .
+-- 4 . o . .
+-- 5 . . . .
