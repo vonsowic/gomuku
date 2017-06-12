@@ -2,12 +2,11 @@ module GameTree where
 
 import Board as Board
 import Data.Tree
-import Data.List.Tree
 import qualified Data.Map as GMap
 import Position as Position
 import Color as Color
-import Data.Tree.Pretty as P
 import Evaluation (evaluate)
+import Configuration
 
 
 newtype GameNode = GNode(Board, Int)
@@ -34,10 +33,12 @@ childrenmarks tree = fmap (\child -> mark child) $ children tree
 
 cut 1 tree = Node (root tree) []
 cut n tree = Node (root tree) (fmap (\x->cut (n-1) x) $ descendants tree)
+
+getChildByPos tree pos = head $ filter (\ch -> ((getPos (board (root ch))) == pos)) (descendants tree)
 ------------------------------------------------------------------------------------------------------------------------
 
 ----- Board with first move --------------------------------------------------------------------------------------------
-fm = insertCell (GMap.fromList []) 2 2 B
+fm = insertCell (GMap.fromList []) (succ (div boardsize 2)) (succ (div boardsize 2)) B
 ------------------------------------------------------------------------------------------------------------------------
 
 ------ create game tree using Data.Tree unfoldTree function ------------------------------------------------------------

@@ -15,7 +15,8 @@ instance Num Position where
     (Pos (x1, y1)) - (Pos(x2, y2)) = Pos(x1-x2, y1-y2)
 
 instance Show Position where
-    show pos = "x: " ++ (show (x pos)) ++ ", y: " ++ (show (y pos))
+    show pos = show $ tuple pos
+
 
 
 x(Pos(x, _)) = x

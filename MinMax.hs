@@ -15,9 +15,3 @@ dig gametree maximize depth =
     in fun $ zip (fmap (\ch -> fst (dig ch (not maximize) (depth-1))) (descendants gametree)) [0..]
 
 getFunction maximize = if maximize then maximum else minimum
-
-
-a = 1
-test =
-    let tmp = a + 1
-    in let a = tmp
