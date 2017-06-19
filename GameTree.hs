@@ -7,9 +7,10 @@ import Position as Position
 import Color as Color
 import Evaluation (evaluate)
 import Configuration
+import Mark
 
 
-newtype GameNode = GNode(Board, Int)
+newtype GameNode = GNode(Board, Mark)
 board(GNode(b, _)) = b
 mark(GNode(_, m)) = m
 
@@ -27,6 +28,7 @@ possibleNextMoves m c = [insertCell m x y c | x <-Board.cords, y <- Board.cords,
 ------ getters ---------------------------------------------------------------------------------------------------------
 root(Node r _) = r
 descendants(Node _ nodes) = nodes
+childless tree = (length (descendants tree)) == 0
 children tree = fmap (\child -> root child) $ descendants tree
 
 childrenmarks tree = fmap (\child -> mark child) $ children tree
@@ -49,3 +51,5 @@ gtreeFromSeed seed = (seed, fmap (\m -> GNode(m, evaluate m)) $ nextMoves $ boar
 ----- for Data.Tree.Pretty ---------------------------------------------------------------------------------------------
 getStringNode board = show board
 ------------------------------------------------------------------------------------------------------------------------
+
+isterminal tree = Terminal == (mark $ root $ tree)

@@ -3,14 +3,16 @@ module Evaluation where
 import Neighborhood
 import Board
 import Data.Map (fromList)
+import Mark
 
 ----- main evaluation function -----------------------------------------------------------------------------------------
 
-evaluate board = sum $ map (\eval -> (mark eval) * ((pattern eval) board)) evals
+evaluate board = sum $ map (\eval -> (mark eval) * Mark((pattern eval) board)) evals
 ------------------------------------------------------------------------------------------------------------------------
 
+
 ----- evaluation type --------------------------------------------------------------------------------------------------
-newtype EvaluationValue pattern = Eval(pattern, Int)
+newtype EvaluationValue pattern = Eval(pattern, Mark)
 pattern(Eval(p, _)) = p
 mark(Eval(_, m)) = m
 ------------------------------------------------------------------------------------------------------------------------
@@ -26,28 +28,24 @@ onefr board = length $ friendly nOfMoore board (getPos board) 1
 
 -- there is one enemy neighbor
 oneen board = length $ enemy nOfMoore board (getPos board) 1
-
-
 ------------------------------------------------------------------------------------------------------------------------
 
 
 ------ evaluation values -----------------------------------------------------------------------------------------------
 evals = [
-    Eval(one, 1),
+    Eval(oneen, 1),
     Eval(onefr, 3)
     ] ++ [
     Eval(f, 25) | f <- (generate 2 friendly)
     ] ++ [
     Eval(f, 10) | f <- (generate 2 enemy)
     ] ++ [
-    Eval(f, 50) | f <- (generate 3 friendly)
+    Eval(f, 250) | f <- (generate 3 friendly)
     ] ++ [
-    Eval(f, 32) | f <- (generate 3 enemy)
-    ] ++ [
-    Eval(f, 1000) | f <- (generate 4 friendly)
-    ] ++ [
-    Eval(f, 490) | f <- (generate 4 enemy)
+    Eval(f, 132) | f <- (generate 3 enemy)
     ]
+    ++ (fmap (\f -> Eval(f, Terminal)) terminals)
+
 ------------------------------------------------------------------------------------------------------------------------
 
 
@@ -56,16 +54,32 @@ evals = [
 -- generate patterns
 generate range filter' = fmap (\n -> (\board -> (if (length (filter' n board (getPos board) range)) == range then 1 else 0))) elemns
 
-elemns = [
-    nOnSlashR,
-    nOnSlashL,
-    nOnBackSlashL,
-    nOnBackSlashR,
-    nInRowL,
-    nInRowR,
-    nInColU,
-    nInColD
+orderedelemns = [
+    (nOnSlashL, nOnSlashR),
+    (nOnBackSlashL, nOnBackSlashR),
+    (nInRowL, nInRowR),
+    (nInColU, nInColD)
+    ]
+
+elemns = tupleToList orderedelemns
+
+terminals = [
+    (\board -> (if (((length (friendly (fst e) board (getPos board) (4-r))) == (4-r)) && ((length (friendly (snd e) board (getPos board) r)) == r))
+        then 1
+        else 0
+        )) |
+    r <- [1..4],
+    e <- orderedelemns
+    ] ++ [
+    (\board -> (if (((length (friendly (snd e) board (getPos board) (4-r))) == (4-r)) && ((length (friendly (fst e) board (getPos board) r)) == r))
+        then 1
+        else 0
+        )) |
+    r <- [1..4],
+    e <- orderedelemns
     ]
 ------------------------------------------------------------------------------------------------------------------------
 
-isterminal board = True `elem` [(f board) == 4 | f <- (generate 4 friendly)]
+tupleToList :: [(a,a)] -> [a]
+tupleToList ((a,b):xs) = a : b : tupleToList xs
+tupleToList _          = []
